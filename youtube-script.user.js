@@ -16,8 +16,6 @@
 // @grant        GM_getResourceURL
 // ==/UserScript==
 
- console.log("test");
-
 function addCssElement(url) {
     var link = document.createElement("link");
     link.href = url;
