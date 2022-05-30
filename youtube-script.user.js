@@ -95,18 +95,10 @@ $(document).ready(function() {
 
         $.each(arr3, function(key, value) {
             var subName = $(value).find("#endpoint").attr("title");
-            console.log(subName)
-            console.log(key)
-            console.log(value)
-            console.log("NEXTTTTTTTTTTTTTTTTTTTTTTTTTTTTT");
             subList[subName] = $(value);
         });
 
-        console.log("oksub");
-        console.log(subList);
-
         $("#input-subs-autocomplete").on("change paste keyup search", function() {
-            console.log("okin");
             var currentInputValue = $(this).val();
             currentInputValue = currentInputValue.normalize('NFD').replace(/[\u0300-\u036f]/g, "").toLowerCase();
 
