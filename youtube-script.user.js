@@ -3,7 +3,7 @@
 // @namespace    http://tampermonkey.net/
 // @match        https://www.youtube.com/*
 // @author       Naboum
-// @version      1.1
+// @version      1.2
 // @updateURL    https://github.com/Naboum/Youtube-Subscription-Input-Search/raw/main/youtube-script.user.js
 // @downloadURL  https://github.com/Naboum/Youtube-Subscription-Input-Search/raw/main/youtube-script.user.js
 // @resource     youtubeCSS https://raw.githubusercontent.com/Naboum/Youtube-Subscription-Input-Search/main/youtube.css
@@ -19,35 +19,35 @@
 function addCssElement(url) {
     var link = document.createElement("link");
     link.href = url;
-    link.rel="stylesheet";
-    link.type="text/css";
+    link.rel = "stylesheet";
+    link.type = "text/css";
     document.head.appendChild(link);
 }
 
-$(document).ready(function() {
+$(document).ready(function () {
     addCssElement(GM_getResourceURL("youtubeCSS"));
 
     var currentState = getFirstState();
 
-    waitForKeyElements ("ytd-guide-entry-renderer#expander-item.style-scope.ytd-guide-collapsible-entry-renderer", clickMore);
-    waitForKeyElements ("div#create.style-scope.ytd-comments-header-renderer", manageFirstMargin);
-    waitForKeyElements ("#sections > ytd-guide-section-renderer:nth-child(2) > h3", subscribingsListReady);
+    waitForKeyElements("ytd-guide-entry-renderer#expander-item.style-scope.ytd-guide-collapsible-entry-renderer", clickMore);
+    waitForKeyElements("div#create.style-scope.ytd-comments-header-renderer", manageFirstMargin);
+    waitForKeyElements("#sections > ytd-guide-section-renderer:nth-child(2) > h3", subscribingsListReady);
 
-    $("button.ytp-size-button.ytp-button").click(function() {
+    $("button.ytp-size-button.ytp-button").click(function () {
         manageMargin(currentState);
         if (currentState === "1") currentState = "0";
         else if (currentState === "0") currentState = "1";
     });
 
-    $("#guide-button").click(function() {
-        if($("app-drawer#guide")[0].hasAttribute("opened")){
-            setTimeout(function(){
+    $("#guide-button").click(function () {
+        if ($("app-drawer#guide")[0].hasAttribute("opened")) {
+            setTimeout(function () {
                 $("#input-subs-autocomplete").focus();
-            },50);
+            }, 50);
         }
     });
 
-    function getFirstState(){
+    function getFirstState() {
         var firstState = $.cookie("wide");
         if (typeof firstState === "undefined") {
             var buttonText = $("button.ytp-size-button.ytp-button").attr("title");
@@ -55,7 +55,6 @@ $(document).ready(function() {
             else return "1";
         }
         else return firstState;
-        return "undefined";
     }
 
     function manageFirstMargin() {
@@ -63,18 +62,18 @@ $(document).ready(function() {
         else if (currentState === "1") $("div#create.style-scope.ytd-comments-header-renderer").css("margin-right", "22px");
     }
 
-    function manageMargin(currentState){
+    function manageMargin(currentState) {
         if (currentState === "1") $("div#create.style-scope.ytd-comments-header-renderer").css("margin-right", "0px");
         else if (currentState === "0") $("div#create.style-scope.ytd-comments-header-renderer").css("margin-right", "22px");
         else console.log("CUCKED");
     }
 
-    function clickMore(jNode){
+    function clickMore(jNode) {
         jNode.click();
     }
 
-    $("#endpoint.yt-simple-endpoint.style-scope.ytd-guide-entry-renderer").mouseup(function(e) {
-        switch(e.which) {
+    $("#endpoint.yt-simple-endpoint.style-scope.ytd-guide-entry-renderer").mouseup(function (e) {
+        switch (e.which) {
             case 1: //left click
             case 2: //middle click
                 $("#input-subs-autocomplete").val('').trigger('change');
@@ -84,7 +83,7 @@ $(document).ready(function() {
         }
     });
 
-    function subscribingsListReady(){
+    function subscribingsListReady() {
         $("#sections > ytd-guide-section-renderer:nth-child(2) > h3").append(`
 <class id="input-container">
 <span class="input-icon"></span>
@@ -97,27 +96,27 @@ $(document).ready(function() {
         var arr2 = subContainer.find("ytd-guide-collapsible-entry-renderer > #expanded > #expandable-items > ytd-guide-entry-renderer:not(:last-child)");
         var arr3 = $.merge(arr1, arr2);
 
-        $.each(arr3, function(key, value) {
+        $.each(arr3, function (key, value) {
             var subName = $(value).find("#endpoint").attr("title");
             subList[subName] = $(value);
         });
 
-        $("#input-subs-autocomplete").on("change paste keyup search", function() {
+        $("#input-subs-autocomplete").on("change paste keyup search", function () {
             var currentInputValue = $(this).val();
             currentInputValue = currentInputValue.normalize('NFD').replace(/[\u0300-\u036f]/g, "").toLowerCase();
 
-            $.each(subList, function(key, value) {
+            $.each(subList, function (key, value) {
                 var sanitizedSubName = key.normalize('NFD').replace(/[\u0300-\u036f]/g, "").toLowerCase();
                 var imgParent = $(value).find("yt-img-shadow");
                 var imgElement = $(value).find("#img");
-                $(value)[sanitizedSubName.indexOf(currentInputValue) > -1 ? 'show' : 'hide' ]();
+                $(value)[sanitizedSubName.indexOf(currentInputValue) > -1 ? 'show' : 'hide']();
 
-                if($(value).is(":visible")) {
-                    if($(imgParent).hasClass("empty")){
+                if ($(value).is(":visible")) {
+                    if ($(imgParent).hasClass("empty")) {
                         $(imgParent).removeClass("empty");
                     }
-                    if($(imgElement).attr("src") == null){
-                        $(imgElement).error(function() {
+                    if ($(imgElement).attr("src") == null) {
+                        $(imgElement).error(function () {
                             $(imgElement).attr("src", "");
                         }).attr("src", "");
                     }
