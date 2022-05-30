@@ -1,0 +1,41 @@
+/* autocompletion input */
+#input-subs-autocomplete {
+    background: #444;
+    color: #d7d7d7;
+    border-radius: 5px;
+    border: 0;
+    margin: 2px 0px 10px 24px;
+    padding: 8px 10px 8px 35px;
+    width: 100px;
+    /*direction:rtl;*/
+    -webkit-transition: all 0.5s ease 0s;
+    -moz-transition: all 0.5s ease 0s;
+    -o-transition: all 0.5s ease 0s;
+    transition: all 0.5s ease 0s;
+}
+#input-subs-autocomplete:focus {
+    outline: none;
+    background:#ccc;
+    color: #6a6f75;
+    width: 200px;
+}
+#input-subs-autocomplete::-webkit-search-cancel-button {
+	cursor: pointer;	
+}
+#input-container{
+	position: relative;
+}
+.input-icon {
+    background: url(https://raw.githubusercontent.com/Naboum/Youtube-Subscription-Input-Search/main/sprite.png) -128px -136px no-repeat;
+    height: 15px;
+    width: 15px;
+    left: 35px;
+    position: absolute;
+    margin-top: 10px;
+}
+.sub-hidden{
+	display: none;
+}
+.ytp-button[title="Regarder sur un téléviseur"]{
+	display: none;
+}
