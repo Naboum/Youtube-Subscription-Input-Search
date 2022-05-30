@@ -3,7 +3,7 @@
 // @namespace    http://tampermonkey.net/
 // @match        https://www.youtube.com/*
 // @author       Naboum
-// @version      1.0
+// @version      1.1
 // @updateURL    https://github.com/Naboum/Youtube-Subscription-Input-Search/raw/main/youtube-script.user.js
 // @downloadURL  https://github.com/Naboum/Youtube-Subscription-Input-Search/raw/main/youtube-script.user.js
 // @resource     youtubeCSS https://raw.githubusercontent.com/Naboum/Youtube-Subscription-Input-Search/main/youtube.css
@@ -15,6 +15,8 @@
 // @grant        GM_getResourceText
 // @grant        GM_getResourceURL
 // ==/UserScript==
+
+ console.log("test");
 
 function addCssElement(url) {
     var link = document.createElement("link");
