@@ -2,7 +2,7 @@
 // @name         youtube script
 // @namespace    http://tampermonkey.net/
 // @match        https://www.youtube.com/*
-// @resource     youtubeCSS https://gist.github.com/Naboum/a35773ecd6a0f7d2fc4446a572ae7e43/raw/980075d5104d009680ddc8346466f8464404892b/youtube.css
+// @resource     youtubeCSS https://raw.githubusercontent.com/Naboum/Youtube-Subscription-Input-Search/main/youtube.css
 // @require      https://gist.github.com/raw/2625891/waitForKeyElements.js
 // @require      http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js
 // @require      https://cdnjs.cloudflare.com/ajax/libs/jquery-cookie/1.4.1/jquery.cookie.min.js
