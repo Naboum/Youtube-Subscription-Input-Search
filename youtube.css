@@ -5,7 +5,7 @@
     border-radius: 5px;
     border: 0;
     margin: 2px 0px 10px 24px;
-    padding: 8px 10px 8px 35px;
+    padding: 8px 10px 8px 12px;
     width: 100px;
     /*direction:rtl;*/
     -webkit-transition: all 0.5s ease 0s;
@@ -29,7 +29,7 @@
     background: url(https://raw.githubusercontent.com/Naboum/Youtube-Subscription-Input-Search/main/sprite.png) -128px -136px no-repeat;
     height: 15px;
     width: 15px;
-    left: 35px;
+    left: 23px;
     position: absolute;
     margin-top: 10px;
 }
