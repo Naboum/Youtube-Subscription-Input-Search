@@ -87,7 +87,7 @@ $(document).ready(function () {
         $("#sections > ytd-guide-section-renderer:nth-child(2) > h3").append(`
 <class id="input-container">
 <span class="input-icon"></span>
-<input id="input-subs-autocomplete" tabindex="-1" type="text" placeholder="Search" autocapitalize="none" autocomplete="off" autocorrect="off" spellcheck="false">
+<input id="input-subs-autocomplete" tabindex="-1" type="text" placeholder="Rechercher" autocapitalize="none" autocomplete="off" autocorrect="off" spellcheck="false">
 </class>`);
         var subContainer = $("#sections > ytd-guide-section-renderer:nth-child(2) > #items");
 
