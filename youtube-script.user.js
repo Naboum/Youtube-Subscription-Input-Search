@@ -25,6 +25,7 @@ function addCssElement(url) {
 }
 
 $(document).ready(function () {
+    console.log("start");
     addCssElement(GM_getResourceURL("youtubeCSS"));
 
     var currentState = getFirstState();
