@@ -4,6 +4,8 @@
 // @match        https://www.youtube.com/*
 // @author       Naboum
 // @version      1.5
+// @updateURL    https://github.com/Naboum/Youtube-Subscription-Input-Search/raw/main/youtube-script.user.js
+// @downloadURL  https://github.com/Naboum/Youtube-Subscription-Input-Search/raw/main/youtube-script.user.js
 // @resource     youtubeCSS https://raw.githubusercontent.com/Naboum/Youtube-Subscription-Input-Search/main/youtube.css
 // @require      https://gist.github.com/raw/2625891/waitForKeyElements.js
 // @require      http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js
