@@ -9,17 +9,34 @@
     width: 180px;
     /*direction:rtl;*/
 }
+
 #input-subs-autocomplete:focus {
     outline: none;
     box-shadow: inset 0 1px 2px rgb(0 0 0 / 30%);
     border: 1px solid #1c62b9;
 }
+
 #input-subs-autocomplete::-webkit-search-cancel-button {
-	cursor: pointer;
+    cursor: pointer;
 }
-#input-container{
-	position: relative;
+
+#input-container {
+    position: relative;
 }
-.sub-hidden{
-	display: none;
+
+.sub-hidden {
+    display: none;
+}
+
+ytd-rich-grid-renderer {
+    --ytd-rich-grid-items-per-row: 5 !important;
+}
+
+ytd-rich-grid-renderer>#contents>ytd-rich-grid-row,
+ytd-rich-grid-renderer>#contents>ytd-rich-grid-row>#contents {
+    display: contents;
+}
+
+ytd-rich-section-renderer.style-scope.ytd-rich-grid-renderer {
+    display: none;
 }
