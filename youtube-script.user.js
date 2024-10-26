@@ -9,9 +9,10 @@
 // @resource     youtubeCSS https://raw.githubusercontent.com/Naboum/Youtube-Subscription-Input-Search/main/youtube.css
 // @require      https://raw.githubusercontent.com/Naboum/Youtube-Subscription-Input-Search/refs/heads/main/csp_fix.js
 // @require      https://gist.github.com/raw/2625891/waitForKeyElements.js
-// @require      http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js
+// @require      https://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js
 // @require      https://cdnjs.cloudflare.com/ajax/libs/jquery-cookie/1.4.1/jquery.cookie.min.js
 // @require      https://code.jquery.com/ui/1.12.1/jquery-ui.js
+// @icon         https://www.google.com/s2/favicons?sz=64&domain=youtube.com
 // @grant        GM_addStyle
 // @grant        GM_getResourceText
 // @grant        GM_getResourceURL
