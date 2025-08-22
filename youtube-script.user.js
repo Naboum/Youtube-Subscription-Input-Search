@@ -1,129 +1,146 @@
 // ==UserScript==
-// @name         Youtube-Subscription-Input-Search
+// @name         Youtube Subs Input Search
+// @run-at       document-start
 // @namespace    http://tampermonkey.net/
 // @match        https://www.youtube.com/*
 // @author       Naboum
-// @version      1.7
+// @version      2.0
 // @updateURL    https://github.com/Naboum/Youtube-Subscription-Input-Search/raw/main/youtube-script.user.js
 // @downloadURL  https://github.com/Naboum/Youtube-Subscription-Input-Search/raw/main/youtube-script.user.js
 // @resource     youtubeCSS https://raw.githubusercontent.com/Naboum/Youtube-Subscription-Input-Search/main/youtube.css
 // @require      https://raw.githubusercontent.com/Naboum/Youtube-Subscription-Input-Search/refs/heads/main/csp_fix.js
-// @require      https://gist.github.com/raw/2625891/waitForKeyElements.js
-// @require      https://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js
-// @require      https://cdnjs.cloudflare.com/ajax/libs/jquery-cookie/1.4.1/jquery.cookie.min.js
-// @require      https://code.jquery.com/ui/1.12.1/jquery-ui.js
 // @icon         https://www.google.com/s2/favicons?sz=64&domain=youtube.com
 // @grant        GM_addStyle
 // @grant        GM_getResourceText
 // @grant        GM_getResourceURL
 // ==/UserScript==
 
-function addCssElement(url) {
-    var link = document.createElement("link");
-    link.href = url;
-    link.rel = "stylesheet";
-    link.type = "text/css";
-    document.head.appendChild(link);
-}
+(function () {
+    "use strict";
 
-$(document).ready(function () {
-    addCssElement(GM_getResourceURL("youtubeCSS"));
+    // Remplace waitForKeyElements.js
+    function waitForElement(selector, callback) {
+        const el = document.querySelector(selector);
+        if (el) return callback(el);
 
-    var currentState = getFirstState();
-
-    waitForKeyElements("ytd-guide-entry-renderer#expander-item.style-scope.ytd-guide-collapsible-entry-renderer", clickMore);
-    waitForKeyElements("div#create.style-scope.ytd-comments-header-renderer", manageFirstMargin);
-    waitForKeyElements("#sections > ytd-guide-section-renderer:nth-child(2) > h3", subscribingsListReady);
-
-    $("button.ytp-size-button.ytp-button").click(function () {
-        manageMargin(currentState);
-        if (currentState === "1") currentState = "0";
-        else if (currentState === "0") currentState = "1";
-    });
-
-    $("#guide-button").click(function () {
-        if ($("app-drawer#guide")[0].hasAttribute("opened")) {
-            setTimeout(function () {
-                $("#input-subs-autocomplete").focus();
-            }, 50);
-        }
-    });
-
-    function getFirstState() {
-        var firstState = $.cookie("wide");
-        if (typeof firstState === "undefined") {
-            var buttonText = $("button.ytp-size-button.ytp-button").attr("title");
-            if (buttonText === "Mode cinéma") return "0";
-            else return "1";
-        }
-        else return firstState;
-    }
-
-    function manageFirstMargin() {
-        if (currentState === "0") $("div#create.style-scope.ytd-comments-header-renderer").css("margin-right", "0px");
-        else if (currentState === "1") $("div#create.style-scope.ytd-comments-header-renderer").css("margin-right", "22px");
-    }
-
-    function manageMargin(currentState) {
-        if (currentState === "1") $("div#create.style-scope.ytd-comments-header-renderer").css("margin-right", "0px");
-        else if (currentState === "0") $("div#create.style-scope.ytd-comments-header-renderer").css("margin-right", "22px");
-        else console.log("CUCKED");
-    }
-
-    function clickMore(jNode) {
-        jNode.click();
-    }
-
-    $("#endpoint.yt-simple-endpoint.style-scope.ytd-guide-entry-renderer").mouseup(function (e) {
-        switch (e.which) {
-            case 1: //left click
-            case 2: //middle click
-                $("#input-subs-autocomplete").val('').trigger('change');
-                break;
-            case 3: //right Click
-                break;
-        }
-    });
-
-    function subscribingsListReady() {
-        $("#sections > ytd-guide-section-renderer:nth-child(2) > h3").append(`
-<class id="input-container">
-<span class="input-icon"></span>
-<input id="input-subs-autocomplete" tabindex="-1" type="text" placeholder="Rechercher" autocapitalize="none" autocomplete="off" autocorrect="off" spellcheck="false">
-</class>`);
-        var subContainer = $("#sections > ytd-guide-section-renderer:nth-child(2) > #items");
-
-        var subList = {};
-        var arr1 = subContainer.children("ytd-guide-entry-renderer");
-        var arr2 = subContainer.find("ytd-guide-collapsible-entry-renderer > #expanded > #expandable-items > ytd-guide-entry-renderer:not(:last-child)");
-        var arr3 = $.merge(arr1, arr2);
-
-        $.each(arr3, function (key, value) {
-            var subName = $(value).find("#endpoint").attr("title");
-            subList[subName] = $(value);
+        const observer = new MutationObserver(() => {
+            const el = document.querySelector(selector);
+            if (el) {
+                observer.disconnect();
+                callback(el);
+            }
         });
 
-        $("#input-subs-autocomplete").on("change paste keyup search", function () {
-            var currentInputValue = $(this).val();
-            currentInputValue = currentInputValue.normalize('NFD').replace(/[\u0300-\u036f]/g, "").toLowerCase();
+        // Vérifier que document.body existe avant d'observer
+        if (document.body) {
+            observer.observe(document.body, { childList: true, subtree: true });
+        } else {
+            // Attendre que le body soit disponible
+            document.addEventListener('DOMContentLoaded', function () {
+                observer.observe(document.body, { childList: true, subtree: true });
+            });
+        }
+    }
 
-            $.each(subList, function (key, value) {
-                var sanitizedSubName = key.normalize('NFD').replace(/[\u0300-\u036f]/g, "").toLowerCase();
-                var imgParent = $(value).find("yt-img-shadow");
-                var imgElement = $(value).find("#img");
-                $(value)[sanitizedSubName.indexOf(currentInputValue) > -1 ? 'show' : 'hide']();
+    // Ajout style perso
+    document.head.insertAdjacentHTML("beforeend", `<link rel="stylesheet" href="${GM_getResourceURL("youtubeCSS")}">`);
 
-                if ($(value).is(":visible")) {
-                    if ($(imgParent).hasClass("empty")) {
-                        $(imgParent).removeClass("empty");
-                    }
-                    if ($(imgElement).attr("src") == null) {
-                        $(imgElement).error(function () {
-                            $(imgElement).attr("src", "");
-                        }).attr("src", "");
-                    }
-                }
+    // Expand la liste des abonnés automatiquement
+    waitForElement("ytd-guide-entry-renderer#expander-item.style-scope.ytd-guide-collapsible-entry-renderer", el => {
+        el.click();
+    });
+
+    // Ajout barre de recherche pour les abonnements et logique autocomplete
+    waitForElement("#sections > ytd-guide-section-renderer:nth-child(2)", el => {
+        //console.log("Section abonnements trouvée :", el);
+
+        // Ajout du champ input en haut de la section
+        el.insertAdjacentHTML("afterbegin", `
+    <div id="input-container">
+        <span class="input-icon"></span>
+        <input id="input-subs-autocomplete" tabindex="-1" type="text" placeholder="Rechercher"
+            autocapitalize="none" autocomplete="off" autocorrect="off" spellcheck="false">
+        <span id="clear-search" class="clear-search-svg" style="display: none;">
+            <svg focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                <path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"></path>
+            </svg>
+        </span>
+    </div>
+            `);
+
+        // Recupère tous les abonnements
+        const sub_container = el.querySelector("#items");
+        const direct_subs = Array.from(sub_container.querySelectorAll("ytd-guide-entry-renderer"));
+        const expanded_subs = Array.from(sub_container.querySelectorAll("ytd-guide-collapsible-entry-renderer > #expanded > #expandable-items > ytd-guide-entry-renderer:not(:last-child)"));
+        const all_subs = direct_subs.concat(expanded_subs);
+
+        // Crée une map, associe les noms d'abonnements à l'élément DOM
+        const sub_map = new Map();
+        const endpoint_selector = "#endpoint";
+
+        all_subs.forEach(element => {
+            const endpoint = element.querySelector(endpoint_selector);
+            const sub_name = endpoint.getAttribute("title");
+            const channel_id = endpoint.href.split('/').pop(); // ID unique de la chaîne
+            const unique_key = `${sub_name}_${channel_id}`; // Clé unique : nom + ID (pour gèrer les abos avec même noms de chaines)
+            sub_map.set(unique_key, element);
+        });
+
+        // Préparation autocomplete
+        const normalized_map = new Map();
+        const normalize_string = str => str.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase();
+
+        sub_map.forEach((element, unique_key) => {
+            const name_part = unique_key.split('_')[0]; // Prend "NomChaîne" sans l'ID
+            const normalized_key = normalize_string(unique_key);
+
+            // Pré-gestion des images qui ne s'affichaient pas, pas sûr d'en avoir toujours besoin
+            const img_parent = element.querySelector("yt-img-shadow");
+            const img_element = element.querySelector("#img");
+            if (img_element && !img_element.getAttribute("src")) {
+                img_element.addEventListener("error", () => img_element.setAttribute("src", ""));
+            }
+
+            normalized_map.set(normalized_key, {
+                element,
+                original_key: unique_key, // NomChaîne_12xyz34
+                original_name: name_part, // NomChaîne
+                img_parent,
+                img_element,
+                is_empty: img_parent?.classList.contains("empty") || false
             });
         });
-    }
-});
+
+        // Tout est prêt, on écoute maintenant
+        const input = document.querySelector("#input-subs-autocomplete");
+        const clear_btn = document.querySelector("#clear-search");
+        let search_timeout;
+        input.addEventListener("input", () => {
+            clearTimeout(search_timeout);
+            search_timeout = setTimeout(() => { // Délai ms pour éviter de relancer tout le code à chaque fois (debounce)
+                clear_btn.style.display = input.value ? "flex" : "none"; // affiche ou cache le bouton clear
+                const query = normalize_string(input.value);
+                normalized_map.forEach((data, normalized_key) => {
+                    const is_visible = normalized_key.includes(query);
+                    data.element.style.display = is_visible ? "" : "none";
+                });
+            }, 150);
+        });
+
+        // Efface la recherche
+        clear_btn.addEventListener("click", () => {
+            input.value = "";
+            input.focus();
+            clear_btn.style.display = "none";
+
+            // Réaffiche tous les abonnements
+            normalized_map.forEach(data => {
+                data.element.style.display = "";
+            });
+        });
+
+        // Focus automatique et gestion du clic
+        input.addEventListener("click", (e) => e.stopPropagation());
+        setTimeout(() => input.focus(), 500);
+    });
+})();
